@@ -2,7 +2,6 @@
 // Copyright 2025-2026 Mindful Software LLC d/b/a Dartastic.io, All rights reserved.
 
 import 'package:dartastic_opentelemetry/dartastic_opentelemetry.dart';
-import 'package:dartastic_opentelemetry_api/dartastic_opentelemetry_api.dart';
 
 import 'otel_yodlee_suppression.dart';
 
@@ -76,82 +75,112 @@ Future<T> tracedYodlee<T>({
   final t = tracer ?? OTel.tracerProvider().getTracer('otel_yodlee');
   final span = t.startSpan('yodlee $operation', kind: SpanKind.client);
   try {
-    span.setStringAttribute('rpc.system', 'yodlee');
-    span.setStringAttribute('rpc.method', operation);
+    span.addAttributes(
+        OTel.attributes([OTel.attributeString('rpc.system', 'yodlee')]));
+    span.addAttributes(
+        OTel.attributes([OTel.attributeString('rpc.method', operation)]));
     final r = await invoke();
     final res = r.result;
     if (res != null) {
       if (res.cobrand != null) {
-        span.setStringAttribute('yodlee.cobrand', res.cobrand!);
+        span.addAttributes(OTel.attributes(
+            [OTel.attributeString('yodlee.cobrand', res.cobrand!)]));
       }
       if (res.environment != null) {
-        span.setStringAttribute('yodlee.environment', res.environment!);
+        span.addAttributes(OTel.attributes(
+            [OTel.attributeString('yodlee.environment', res.environment!)]));
       }
       if (res.surface != null) {
-        span.setStringAttribute('yodlee.surface', res.surface!);
+        span.addAttributes(OTel.attributes(
+            [OTel.attributeString('yodlee.surface', res.surface!)]));
       }
       if (res.providerId != null) {
-        span.setStringAttribute('yodlee.provider.id', res.providerId!);
+        span.addAttributes(OTel.attributes(
+            [OTel.attributeString('yodlee.provider.id', res.providerId!)]));
       }
       if (res.providerName != null) {
-        span.setStringAttribute('yodlee.provider.name', res.providerName!);
+        span.addAttributes(OTel.attributes(
+            [OTel.attributeString('yodlee.provider.name', res.providerName!)]));
       }
       if (res.providerCountry != null) {
-        span.setStringAttribute(
-            'yodlee.provider.country', res.providerCountry!);
+        span.addAttributes(OTel.attributes([
+          OTel.attributeString('yodlee.provider.country', res.providerCountry!)
+        ]));
       }
       if (res.providerAccountId != null) {
-        span.setStringAttribute(
-            'yodlee.provider_account.id', res.providerAccountId!);
+        span.addAttributes(OTel.attributes([
+          OTel.attributeString(
+              'yodlee.provider_account.id', res.providerAccountId!)
+        ]));
       }
       if (res.providerAccountStatus != null) {
-        span.setStringAttribute(
-            'yodlee.provider_account.status', res.providerAccountStatus!);
+        span.addAttributes(OTel.attributes([
+          OTel.attributeString(
+              'yodlee.provider_account.status', res.providerAccountStatus!)
+        ]));
       }
       if (res.refreshStatus != null) {
-        span.setStringAttribute('yodlee.refresh.status', res.refreshStatus!);
+        span.addAttributes(OTel.attributes([
+          OTel.attributeString('yodlee.refresh.status', res.refreshStatus!)
+        ]));
       }
       if (res.aggregationMode != null) {
-        span.setStringAttribute(
-            'yodlee.aggregation.mode', res.aggregationMode!);
+        span.addAttributes(OTel.attributes([
+          OTel.attributeString('yodlee.aggregation.mode', res.aggregationMode!)
+        ]));
       }
       if (res.accountId != null) {
-        span.setStringAttribute('yodlee.account.id', res.accountId!);
+        span.addAttributes(OTel.attributes(
+            [OTel.attributeString('yodlee.account.id', res.accountId!)]));
       }
       if (res.accountType != null) {
-        span.setStringAttribute('yodlee.account.type', res.accountType!);
+        span.addAttributes(OTel.attributes(
+            [OTel.attributeString('yodlee.account.type', res.accountType!)]));
       }
       if (res.accountContainer != null) {
-        span.setStringAttribute(
-            'yodlee.account.container', res.accountContainer!);
+        span.addAttributes(OTel.attributes([
+          OTel.attributeString(
+              'yodlee.account.container', res.accountContainer!)
+        ]));
       }
       if (res.transactionsCount != null) {
-        span.setIntAttribute(
-            'yodlee.transactions.count', res.transactionsCount!);
+        span.addAttributes(OTel.attributes([
+          OTel.attributeInt('yodlee.transactions.count', res.transactionsCount!)
+        ]));
       }
       if (res.daysReturned != null) {
-        span.setIntAttribute('yodlee.days_returned', res.daysReturned!);
+        span.addAttributes(OTel.attributes(
+            [OTel.attributeInt('yodlee.days_returned', res.daysReturned!)]));
       }
       if (res.holdingsCount != null) {
-        span.setIntAttribute('yodlee.holdings.count', res.holdingsCount!);
+        span.addAttributes(OTel.attributes(
+            [OTel.attributeInt('yodlee.holdings.count', res.holdingsCount!)]));
       }
       if (res.statementsCount != null) {
-        span.setIntAttribute('yodlee.statements.count', res.statementsCount!);
+        span.addAttributes(OTel.attributes([
+          OTel.attributeInt('yodlee.statements.count', res.statementsCount!)
+        ]));
       }
       if (res.documentsCount != null) {
-        span.setIntAttribute('yodlee.documents.count', res.documentsCount!);
+        span.addAttributes(OTel.attributes([
+          OTel.attributeInt('yodlee.documents.count', res.documentsCount!)
+        ]));
       }
       if (res.mfaRequired != null) {
-        span.setBoolAttribute('yodlee.mfa.required', res.mfaRequired!);
+        span.addAttributes(OTel.attributes(
+            [OTel.attributeBool('yodlee.mfa.required', res.mfaRequired!)]));
       }
       if (res.fastLinkFlow != null) {
-        span.setStringAttribute('yodlee.fastlink.flow', res.fastLinkFlow!);
+        span.addAttributes(OTel.attributes(
+            [OTel.attributeString('yodlee.fastlink.flow', res.fastLinkFlow!)]));
       }
       if (res.statusCode != null) {
-        span.setIntAttribute('http.response.status_code', res.statusCode!);
+        span.addAttributes(OTel.attributes(
+            [OTel.attributeInt('http.response.status_code', res.statusCode!)]));
       }
       if (res.errorCode != null) {
-        span.setStringAttribute('yodlee.error.code', res.errorCode!);
+        span.addAttributes(OTel.attributes(
+            [OTel.attributeString('yodlee.error.code', res.errorCode!)]));
       }
       final fail = res.errorCode != null ||
           (res.statusCode != null && res.statusCode! >= 400) ||
@@ -159,8 +188,10 @@ Future<T> tracedYodlee<T>({
           res.providerAccountStatus == 'FAILED' ||
           res.providerAccountStatus == 'LOGIN_IN_PROGRESS_FAILED';
       if (fail) {
-        span.setStringAttribute(
-            ErrorResource.errorType.key, res.errorCode ?? 'yodlee.error');
+        span.addAttributes(OTel.attributes([
+          OTel.attributeString(
+              ErrorResource.errorType.key, res.errorCode ?? 'yodlee.error')
+        ]));
         span.setStatus(SpanStatusCode.Error, res.errorMessage);
       }
     }
