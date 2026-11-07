@@ -1,11 +1,12 @@
-// Licensed under the Dartastic Pro Software License Agreement.
+// Licensed under the Apache License, Version 2.0
 // Copyright 2025-2026 Mindful Software LLC d/b/a Dartastic.io, All rights reserved.
 
-import 'package:dartastic_opentelemetry/dartastic_opentelemetry.dart';
+import 'package:dartastic_opentelemetry_api/dartastic_opentelemetry_api.dart';
 
 import 'otel_yodlee_suppression.dart';
 
 class YodleeResult {
+  /// Creates a result.
   const YodleeResult({
     this.cobrand,
     this.environment,
@@ -57,8 +58,13 @@ class YodleeResult {
   final String? errorMessage;
 }
 
+/// What a traced call returned: the value for the caller plus fields
+/// recorded on the span.
 class YodleeCallResult<T> {
+  /// Creates a call result.
   const YodleeCallResult({required this.value, this.result});
+
+  /// The value returned to the caller.
   final T value;
   final YodleeResult? result;
 }
@@ -66,121 +72,129 @@ class YodleeCallResult<T> {
 Future<T> tracedYodlee<T>({
   required String operation,
   required Future<YodleeCallResult<T>> Function() invoke,
-  Tracer? tracer,
+  APITracer? tracer,
 }) async {
   if (yodleeInstrumentationSuppressed()) {
     final r = await invoke();
     return r.value;
   }
-  final t = tracer ?? OTel.tracerProvider().getTracer('otel_yodlee');
+  final t = tracer ?? OTelAPI.tracerProvider().getTracer('otel_yodlee');
   final span = t.startSpan('yodlee $operation', kind: SpanKind.client);
   try {
     span.addAttributes(
-        OTel.attributes([OTel.attributeString('rpc.system', 'yodlee')]));
+        OTelAPI.attributes([OTelAPI.attributeString('rpc.system', 'yodlee')]));
     span.addAttributes(
-        OTel.attributes([OTel.attributeString('rpc.method', operation)]));
+        OTelAPI.attributes([OTelAPI.attributeString('rpc.method', operation)]));
     final r = await invoke();
     final res = r.result;
     if (res != null) {
       if (res.cobrand != null) {
-        span.addAttributes(OTel.attributes(
-            [OTel.attributeString('yodlee.cobrand', res.cobrand!)]));
+        span.addAttributes(OTelAPI.attributes(
+            [OTelAPI.attributeString('yodlee.cobrand', res.cobrand!)]));
       }
       if (res.environment != null) {
-        span.addAttributes(OTel.attributes(
-            [OTel.attributeString('yodlee.environment', res.environment!)]));
+        span.addAttributes(OTelAPI.attributes(
+            [OTelAPI.attributeString('yodlee.environment', res.environment!)]));
       }
       if (res.surface != null) {
-        span.addAttributes(OTel.attributes(
-            [OTel.attributeString('yodlee.surface', res.surface!)]));
+        span.addAttributes(OTelAPI.attributes(
+            [OTelAPI.attributeString('yodlee.surface', res.surface!)]));
       }
       if (res.providerId != null) {
-        span.addAttributes(OTel.attributes(
-            [OTel.attributeString('yodlee.provider.id', res.providerId!)]));
+        span.addAttributes(OTelAPI.attributes(
+            [OTelAPI.attributeString('yodlee.provider.id', res.providerId!)]));
       }
       if (res.providerName != null) {
-        span.addAttributes(OTel.attributes(
-            [OTel.attributeString('yodlee.provider.name', res.providerName!)]));
+        span.addAttributes(OTelAPI.attributes([
+          OTelAPI.attributeString('yodlee.provider.name', res.providerName!)
+        ]));
       }
       if (res.providerCountry != null) {
-        span.addAttributes(OTel.attributes([
-          OTel.attributeString('yodlee.provider.country', res.providerCountry!)
+        span.addAttributes(OTelAPI.attributes([
+          OTelAPI.attributeString(
+              'yodlee.provider.country', res.providerCountry!)
         ]));
       }
       if (res.providerAccountId != null) {
-        span.addAttributes(OTel.attributes([
-          OTel.attributeString(
+        span.addAttributes(OTelAPI.attributes([
+          OTelAPI.attributeString(
               'yodlee.provider_account.id', res.providerAccountId!)
         ]));
       }
       if (res.providerAccountStatus != null) {
-        span.addAttributes(OTel.attributes([
-          OTel.attributeString(
+        span.addAttributes(OTelAPI.attributes([
+          OTelAPI.attributeString(
               'yodlee.provider_account.status', res.providerAccountStatus!)
         ]));
       }
       if (res.refreshStatus != null) {
-        span.addAttributes(OTel.attributes([
-          OTel.attributeString('yodlee.refresh.status', res.refreshStatus!)
+        span.addAttributes(OTelAPI.attributes([
+          OTelAPI.attributeString('yodlee.refresh.status', res.refreshStatus!)
         ]));
       }
       if (res.aggregationMode != null) {
-        span.addAttributes(OTel.attributes([
-          OTel.attributeString('yodlee.aggregation.mode', res.aggregationMode!)
+        span.addAttributes(OTelAPI.attributes([
+          OTelAPI.attributeString(
+              'yodlee.aggregation.mode', res.aggregationMode!)
         ]));
       }
       if (res.accountId != null) {
-        span.addAttributes(OTel.attributes(
-            [OTel.attributeString('yodlee.account.id', res.accountId!)]));
+        span.addAttributes(OTelAPI.attributes(
+            [OTelAPI.attributeString('yodlee.account.id', res.accountId!)]));
       }
       if (res.accountType != null) {
-        span.addAttributes(OTel.attributes(
-            [OTel.attributeString('yodlee.account.type', res.accountType!)]));
+        span.addAttributes(OTelAPI.attributes([
+          OTelAPI.attributeString('yodlee.account.type', res.accountType!)
+        ]));
       }
       if (res.accountContainer != null) {
-        span.addAttributes(OTel.attributes([
-          OTel.attributeString(
+        span.addAttributes(OTelAPI.attributes([
+          OTelAPI.attributeString(
               'yodlee.account.container', res.accountContainer!)
         ]));
       }
       if (res.transactionsCount != null) {
-        span.addAttributes(OTel.attributes([
-          OTel.attributeInt('yodlee.transactions.count', res.transactionsCount!)
+        span.addAttributes(OTelAPI.attributes([
+          OTelAPI.attributeInt(
+              'yodlee.transactions.count', res.transactionsCount!)
         ]));
       }
       if (res.daysReturned != null) {
-        span.addAttributes(OTel.attributes(
-            [OTel.attributeInt('yodlee.days_returned', res.daysReturned!)]));
+        span.addAttributes(OTelAPI.attributes(
+            [OTelAPI.attributeInt('yodlee.days_returned', res.daysReturned!)]));
       }
       if (res.holdingsCount != null) {
-        span.addAttributes(OTel.attributes(
-            [OTel.attributeInt('yodlee.holdings.count', res.holdingsCount!)]));
+        span.addAttributes(OTelAPI.attributes([
+          OTelAPI.attributeInt('yodlee.holdings.count', res.holdingsCount!)
+        ]));
       }
       if (res.statementsCount != null) {
-        span.addAttributes(OTel.attributes([
-          OTel.attributeInt('yodlee.statements.count', res.statementsCount!)
+        span.addAttributes(OTelAPI.attributes([
+          OTelAPI.attributeInt('yodlee.statements.count', res.statementsCount!)
         ]));
       }
       if (res.documentsCount != null) {
-        span.addAttributes(OTel.attributes([
-          OTel.attributeInt('yodlee.documents.count', res.documentsCount!)
+        span.addAttributes(OTelAPI.attributes([
+          OTelAPI.attributeInt('yodlee.documents.count', res.documentsCount!)
         ]));
       }
       if (res.mfaRequired != null) {
-        span.addAttributes(OTel.attributes(
-            [OTel.attributeBool('yodlee.mfa.required', res.mfaRequired!)]));
+        span.addAttributes(OTelAPI.attributes(
+            [OTelAPI.attributeBool('yodlee.mfa.required', res.mfaRequired!)]));
       }
       if (res.fastLinkFlow != null) {
-        span.addAttributes(OTel.attributes(
-            [OTel.attributeString('yodlee.fastlink.flow', res.fastLinkFlow!)]));
+        span.addAttributes(OTelAPI.attributes([
+          OTelAPI.attributeString('yodlee.fastlink.flow', res.fastLinkFlow!)
+        ]));
       }
       if (res.statusCode != null) {
-        span.addAttributes(OTel.attributes(
-            [OTel.attributeInt('http.response.status_code', res.statusCode!)]));
+        span.addAttributes(OTelAPI.attributes([
+          OTelAPI.attributeInt('http.response.status_code', res.statusCode!)
+        ]));
       }
       if (res.errorCode != null) {
-        span.addAttributes(OTel.attributes(
-            [OTel.attributeString('yodlee.error.code', res.errorCode!)]));
+        span.addAttributes(OTelAPI.attributes(
+            [OTelAPI.attributeString('yodlee.error.code', res.errorCode!)]));
       }
       final fail = res.errorCode != null ||
           (res.statusCode != null && res.statusCode! >= 400) ||
@@ -188,9 +202,9 @@ Future<T> tracedYodlee<T>({
           res.providerAccountStatus == 'FAILED' ||
           res.providerAccountStatus == 'LOGIN_IN_PROGRESS_FAILED';
       if (fail) {
-        span.addAttributes(OTel.attributes([
-          OTel.attributeString(
-              ErrorResource.errorType.key, res.errorCode ?? 'yodlee.error')
+        span.addAttributes(OTelAPI.attributes([
+          OTelAPI.attributeString(
+              ErrorAttributes.errorType.key, res.errorCode ?? 'yodlee.error')
         ]));
         span.setStatus(SpanStatusCode.Error, res.errorMessage);
       }
